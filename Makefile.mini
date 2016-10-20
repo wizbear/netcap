@@ -1,0 +1,76 @@
+CC = g++ 
+LD = ld 
+RM = rm -f
+CFLAGS_DEBUG_OPENCV   = -g -O0 -Wall -std=c++11 -DDEBUG -D_LINUX 
+CFLAGS_DEBUG_NOOPENCV = -g -O0 -Wall -std=c++11 -DDEBUG -D_LINUX -D_NO_OPENCV
+CFLAGS_RELEASE_OPENCV   = -O2 -Wall -std=c++11 -D_LINUX 
+CFLAGS_RELEASE_NOOPENCV = -O2 -Wall -std=c++11 -D_LINUX -D_NO_OPENCV
+LDFLAGS = -L. -L/usr/local/lib 
+
+BUILD = netcap
+
+.PHONY: all clean 
+
+all: $(BUILD)
+
+netcap:
+	rm -f ./build/*.o
+	mkdir -p ./build
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o  
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/main.cpp           -o ./build/src_main.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/netcap_common.cpp  -o ./build/src_netcap_common.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/server.cpp         -o ./build/src_server.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/client_opencv.cpp  -o ./build/src_client_opencv.cpp.o  
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/server_opencv.cpp  -o ./build/src_server_opencv.cpp.o  
+	ls ./build/*.o > netcap.txt
+	$(CC) -o ./build/netcap @"netcap.txt" -L. -L/usr/local/lib -L/usr/local/lib   -linotifytools -lopencv_stitching -lopencv_superres -lopencv_videostab  -lopencv_video  -lopencv_calib3d -lopencv_features2d -lopencv_flann  -lopencv_objdetect -lopencv_ml  -lopencv_highgui  -lopencv_photo -lopencv_imgproc -lopencv_core
+	cp ./build/netcap ./client
+	cp ./build/netcap ./server
+
+netcap_noopencv:
+	rm -f ./build/*.o
+	mkdir -p ./build
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o  
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/main.cpp           -o ./build/src_main.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/netcap_common.cpp  -o ./build/src_netcap_common.cpp.o 
+	$(CC) $(CFLAGS_DEBUG_OPENCV) -I. -c ./src/server.cpp         -o ./build/src_server.cpp.o 
+	ls ./build/*.o > netcap.txt
+	$(CC) -o ./build/netcap @"netcap.txt" -L. -L/usr/local/lib -L/usr/local/lib
+	cp ./build/netcap ./client
+	cp ./build/netcap ./server
+
+
+netcap_release:
+	rm -f ./build/*.o
+	mkdir -p ./build
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o  
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/main.cpp           -o ./build/src_main.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/netcap_common.cpp  -o ./build/src_netcap_common.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/server.cpp         -o ./build/src_server.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/client_opencv.cpp  -o ./build/src_client_opencv.cpp.o  
+	$(CC) $(CFLAGS_RELEASE_OPENCV) -I. -c ./src/server_opencv.cpp  -o ./build/src_server_opencv.cpp.o  
+	ls ./build/*.o > netcap.txt
+	$(CC) -o ./build/netcap @"netcap.txt" -L. -L/usr/local/lib -L/usr/local/lib   -linotifytools -lopencv_stitching -lopencv_superres -lopencv_videostab  -lopencv_video  -lopencv_calib3d -lopencv_features2d -lopencv_flann  -lopencv_objdetect -lopencv_ml  -lopencv_highgui  -lopencv_photo -lopencv_imgproc -lopencv_core
+	cp ./build/netcap ./client
+	cp ./build/netcap ./server
+
+netcap_release_noopencv:
+	rm -f ./build/*.o
+	mkdir -p ./build
+	$(CC) $(CFLAGS_RELEASE_NOOPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o  
+	$(CC) $(CFLAGS_RELEASE_NOOPENCV) -I. -c ./src/main.cpp           -o ./build/src_main.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_NOOPENCV) -I. -c ./src/client.cpp         -o ./build/src_client.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_NOOPENCV) -I. -c ./src/netcap_common.cpp  -o ./build/src_netcap_common.cpp.o 
+	$(CC) $(CFLAGS_RELEASE_NOOPENCV) -I. -c ./src/server.cpp         -o ./build/src_server.cpp.o 
+	ls ./build/*.o > netcap.txt
+	$(CC) -o ./build/netcap @"netcap.txt" -L. -L/usr/local/lib -L/usr/local/lib
+	cp ./build/netcap ./client
+	cp ./build/netcap ./server
+
+
+clean: 
+	$(RM) ./build/*.o 
+
